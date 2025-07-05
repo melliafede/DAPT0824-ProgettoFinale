@@ -53,6 +53,14 @@ wta = list(wta_dict.values())[0]
 for df in list(wta_dict.values()):
     wta = pd.concat([wta, df], ignore_index=True)
 
+''' Conversion of winner seed column to type string '''
+wta["winner_seed"] = wta["winner_seed"].astype(str)
+
+''' Create a filtered table for surfaces '''
+surfaces = pd.DataFrame(list(atp["surface"].unique())[:-1])
+surfaces_dest_file = "report_datasets/surfaces.csv"
+surfaces.to_csv(surfaces_dest_file)
+
 ''' Write dataframes to CSV files '''
 atp_dest_file = "report_datasets/atp_dataset.csv"
 atp.to_csv(atp_dest_file)
@@ -61,4 +69,6 @@ wta_dest_file = "report_datasets/wta_dataset.csv"
 wta.to_csv(wta_dest_file)
 
 ''' Verify carpet surface tournament '''
-print(atp[(atp["surface"] == "Carpet") & (atp["tourney_level"].isin(["A", "M", "G", "F"]))]["tourney_name"].unique())
+
+print(wta["winner_seed"].unique())
+# print(wta[(wta["surface"] == "Carpet") & (wta["tourney_level"].isin(["P", "PM", "G", "F"]))]["tourney_name"].unique())
