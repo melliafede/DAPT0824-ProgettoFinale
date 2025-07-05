@@ -45,13 +45,20 @@ for year, df in wta_dict.items():
 ''' Combine all dataframes in one'''
 atp = list(atp_dict.values())[0]
 for df in list(atp_dict.values()):
-    atp = pd.concat([atp, df], ignore_index = True)
+    atp = pd.concat([atp, df], ignore_index=True)
 
 print(atp.columns)
 
 wta = list(wta_dict.values())[0]
 for df in list(wta_dict.values()):
-    wta = pd.concat([wta, df], ignore_index = True)
+    wta = pd.concat([wta, df], ignore_index=True)
 
-print(wta.columns)
+''' Write dataframes to CSV files '''
+atp_dest_file = "report_datasets/atp_dataset.csv"
+atp.to_csv(atp_dest_file)
 
+wta_dest_file = "report_datasets/wta_dataset.csv"
+wta.to_csv(wta_dest_file)
+
+''' Verify carpet surface tournament '''
+print(atp[(atp["surface"] == "Carpet") & (atp["tourney_level"].isin(["A", "M", "G", "F"]))]["tourney_name"].unique())
