@@ -65,6 +65,8 @@ surfaces.to_csv(surfaces_dest_file)
 
 ''' Write dataframes to CSV files '''
 atp_dest_file = "report_datasets/atp_dataset.csv"
+atp["w_1stIn%"] = atp["w_1stIn"] / atp["w_svpt"]
+atp["l_1stIn%"] = atp["l_1stIn"] / atp["l_svpt"]
 atp.to_csv(atp_dest_file)
 
 wta_dest_file = "report_datasets/wta_dataset.csv"

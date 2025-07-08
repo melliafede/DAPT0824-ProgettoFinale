@@ -18,17 +18,22 @@ atp["year"] = atp["year"].astype(int)
 print(atp.columns)
 
 
-def winners_losers_df(_year: int, _surface=None):
-    if _surface is None:
+def winners_losers_df(_year: int, _surface=None, _tournament_name=None):
+    if (_surface is None) and (_tournament_name is None):
         atp_filtered = atp[atp["year"] == _year]
-    else:
+    elif _surface is not None:
         atp_filtered = atp[(atp["year"] == _year) & (atp["surface"] == _surface)]
+    elif _tournament_name is not None:
+        atp_filtered = atp[(atp["year"] == _year) & (atp["tourney_name"] == _tournament_name)]
+    else:
+        atp_filtered = atp[
+            (atp["year"] == _year) & (atp["surface"] == _surface) & (atp["tourney_name"] == _tournament_name)]
 
     ''' Winners '''
     atp_top_100 = atp_filtered[atp_filtered["winner_rank"] <= 100]
     winners_df = atp_top_100.groupby(["winner_name"], as_index=False).agg({
         "w_ace": "mean",
-        "w_1stIn": "mean",
+        "w_1stIn%": "mean",
         "w_df": "mean",
         "w_1stWon": "mean",
         "w_bpFaced": "mean",
@@ -90,21 +95,36 @@ for surface in surfaces:
                              how="left")
     surface_merge = surface_merge.drop(columns="loser_name")
     surface_merge = surface_merge.rename(columns={"winner_id": "matches_won", "loser_id": "matches_lost"})
-    surface_merge["W/L%"] = surface_merge["matches_won"] / (surface_merge["matches_won"] + surface_merge["matches_lost"])
+    surface_merge["W/L%"] = surface_merge["matches_won"] / (
+            surface_merge["matches_won"] + surface_merge["matches_lost"])
 
     surface_merge.to_csv(f"report_datasets/ATP_players/{surface.lower()}_2004-2024_merged.csv")
 
 ''' Testing '''
-test_surface = "Hard"
-test_winners, test_losers = winners_losers_df(2004, test_surface)
-for year in range(2005, 2025):
-    new_winners_df, new_losers_df = winners_losers_df(year, test_surface)
-    test_winners = pd.concat([test_winners, new_winners_df], ignore_index=True)
-    test_losers = pd.concat([test_losers, new_losers_df], ignore_index=True)
 
-test_merge = pd.merge(test_winners, test_losers, left_on=["winner_name", "year"], right_on=["loser_name", "year"],
+
+def get_tournament_stats(_tournament):
+    _winners, _losers = winners_losers_df(2004, None, _tournament)
+    for year in range(2005, 2025):
+        _new_winners, _new_loosers = winners_losers_df(year, None, _tournament)
+        _winners = pd.concat([_winners, _new_winners], ignore_index=True)
+        _losers = pd.concat([_losers, _new_loosers], ignore_index=True)
+    _merge = pd.merge(_winners, _losers, left_on=["winner_name", "year"], right_on=["loser_name", "year"],
                       how="left")
-test_merge = test_merge.drop(columns="loser_name")
-test_merge = test_merge.rename(columns={"winner_id": "matches_won", "loser_id": "matches_lost"})
-test_merge["W/L%"] = test_merge["matches_won"] / (test_merge["matches_won"] + test_merge["matches_lost"])
-print(test_merge.sort_values(by="W/L%", ascending=False))
+    _merge = _merge.drop(columns="loser_name")
+    _merge = _merge.rename(
+        columns={"winner_name": "player_name", "winner_id": "matches_won", "loser_id": "matches_lost"})
+    _merge["matches"] = _merge["matches_won"] + _merge["matches_lost"]
+    _merge["W/L%"] = _merge["matches_won"] / _merge["matches"]
+
+    return _merge
+
+
+wimbledon_df = get_tournament_stats("Wimbledon")
+print(wimbledon_df[wimbledon_df["player_name"].str.match(r'.*\sSinner')])
+
+
+print(atp.loc[(atp["tourney_name"] == "Wimbledon") &
+              (atp["winner_name"] == "Jannik Sinner"), ["year", "w_svpt", "w_1stIn", "w_1stIn%"]])
+
+print(atp.groupby(["surface"])["w_1stIn%"].mean(), atp.groupby(["surface"])["l_1stIn%"].mean())
