@@ -32,8 +32,8 @@ atp_dict = retrieve_df_list(atp_folder_path)
 wta_folder_path = "tennis_wta-master/"
 wta_dict = retrieve_df_list(wta_folder_path)
 
-print(atp_dict["2024"][(atp_dict["2024"]["tourney_name"] == "Australian Open") & (atp_dict["2024"]["round"] == "F")])
-print(wta_dict["2024"][(wta_dict["2024"]["tourney_name"] == "Australian Open") & (wta_dict["2024"]["round"] == "F")])
+# print(atp_dict["2024"][(atp_dict["2024"]["tourney_name"] == "Australian Open") & (atp_dict["2024"]["round"] == "F")])
+# print(wta_dict["2024"][(wta_dict["2024"]["tourney_name"] == "Australian Open") & (wta_dict["2024"]["round"] == "F")])
 
 ''' Insert YEAR column to each dataframe'''
 for year, df in atp_dict.items():
@@ -47,7 +47,7 @@ atp = list(atp_dict.values())[0]
 for df in list(atp_dict.values()):
     atp = pd.concat([atp, df], ignore_index=True)
 
-print(atp.columns)
+# print(atp.columns)
 
 wta = list(wta_dict.values())[0]
 for df in list(wta_dict.values()):
@@ -55,6 +55,8 @@ for df in list(wta_dict.values()):
 
 ''' Conversion of winner seed column to type string '''
 wta["winner_seed"] = wta["winner_seed"].astype(str)
+wta["draw_size"] = wta["draw_size"].astype(str)
+wta["loser_seed"] = wta["loser_seed"].astype(str)
 
 ''' Create a filtered table for surfaces '''
 surfaces = pd.DataFrame(list(atp["surface"].unique())[:-1])
@@ -70,7 +72,7 @@ wta.to_csv(wta_dest_file)
 
 ''' Verify carpet surface tournament '''
 
-print(wta["winner_seed"].unique())
+# print(wta["winner_seed"].unique())
 # print(wta[(wta["surface"] == "Carpet") & (wta["tourney_level"].isin(["P", "PM", "G", "F"]))]["tourney_name"].unique())
 
-''' Create players table '''
+
