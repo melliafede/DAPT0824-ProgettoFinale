@@ -121,10 +121,8 @@ def get_tournament_stats(_tournament):
 
 
 wimbledon_df = get_tournament_stats("Wimbledon")
-print(wimbledon_df[wimbledon_df["player_name"].str.match(r'.*\sSinner')])
 
-
-print(atp.loc[(atp["tourney_name"] == "Wimbledon") &
-              (atp["winner_name"] == "Jannik Sinner"), ["year", "w_svpt", "w_1stIn", "w_1stIn%"]])
-
-print(atp.groupby(["surface"])["w_1stIn%"].mean(), atp.groupby(["surface"])["l_1stIn%"].mean())
+df = atp[(atp["winner_name"] == "Jannik Sinner") &
+         (atp["tourney_name"] == "Wimbledon")]
+gr = df.groupby(["winner_name"])["w_1stIn"].mean()
+print(gr)
