@@ -72,3 +72,5 @@ wta.to_csv(wta_dest_file)
 
 print(wta["winner_seed"].unique())
 # print(wta[(wta["surface"] == "Carpet") & (wta["tourney_level"].isin(["P", "PM", "G", "F"]))]["tourney_name"].unique())
+
+''' Create players table '''
