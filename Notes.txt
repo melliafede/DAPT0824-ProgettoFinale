@@ -2,3 +2,11 @@ https://www.tennisabstract.com/
 https://datahub.io/core/atp-world-tour-tennis-data
 https://www.kaggle.com/datasets/dissfya/atp-tennis-2000-2023daily-pull
 https://github.com/JeffSackmann/
+
+
+COLORS:
+yellow #E3DE61
+clay #EB895F
+grass #97B067
+hard #717BC5
+black #333333

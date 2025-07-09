@@ -15,12 +15,7 @@ def retrieve_tournaments(file_path):
         "tourney_level": "tournament_level"
     })
     output_df["tournament_date"] = output_df["tournament_date"].astype(str)
-    output_df["tournament_date"] = output_df["tournament_date"].str.replace(
-        r'(\d{4})(\d{2})(\d{2})',
-        r'\3-\2-\1',
-        regex=True
-    )
-    output_df["tournament_date"] = pd.to_datetime(output_df["tournament_date"], errors="coerce")
+    output_df["tournament_date"] = pd.to_datetime(output_df["tournament_date"], format='%Y%m%d')
     output_df = output_df.sort_values(by="tournament_name", ascending=True)
     output_df = output_df[output_df["tournament_level"] != "D"]  # let's remove the davis cup matches
     output_df = output_df[output_df["tournament_date"] > "2000-01-01"]
@@ -31,6 +26,8 @@ set_display_options()
 
 atp_tournaments = retrieve_tournaments("tennis_atp-master/atp_matches.csv")
 wta_tournaments = retrieve_tournaments("tennis_wta-master/wta_matches.csv")
+print(atp_tournaments[atp_tournaments["tournament_name"] == "Wimbledon"])
+print(atp_tournaments[atp_tournaments["tournament_name"] == "Wimbledon"].count())
 
 atp_tournaments["tournament_id"] = "ATP_" + atp_tournaments["tournament_id"]
 wta_tournaments["tournament_id"] = "WTA_" + wta_tournaments["tournament_id"]

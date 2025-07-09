@@ -7,6 +7,13 @@ def retrieve_matches(file_path):
     df = pd.read_csv(file_path)
     print(df.columns)
 
+    df = df[df["surface"].isin(["Grass", "Clay", "Hard"])]
+
+    df["tourney_date"] = df["tourney_date"].astype(str)
+    df["tourney_date"] = pd.to_datetime(df["tourney_date"], format='%Y%m%d')
+    df = df[df["tourney_level"] != "D"]  # let's remove the davis cup matches
+    df = df[df["tourney_date"] > "2000-01-01"]
+
     output_df = df[["tourney_id", "tourney_date", "winner_id", "winner_age", "loser_id", "loser_age",
                     "score", "round", "minutes", "w_ace", "w_df", 'w_svpt', 'w_1stIn',
                     'w_1stWon', 'w_2ndWon', 'w_SvGms', 'w_bpSaved', 'w_bpFaced', 'l_ace',
@@ -16,13 +23,6 @@ def retrieve_matches(file_path):
         "tourney_id": "tournament_id",
         "tourney_date": "tournament_date"
     })
-
-    output_df["tournament_date"] = output_df["tournament_date"].astype(str)
-    output_df["tournament_date"] = output_df["tournament_date"].str.replace(
-        r'(\d{4})(\d{2})(\d{2})',
-        r'\3-\2-\1',
-        regex=True
-    )
 
     output_df = output_df[(output_df["w_svpt"] != 0) &
                           (output_df["l_svpt"] != 0) &
