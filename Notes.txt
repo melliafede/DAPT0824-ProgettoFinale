@@ -10,3 +10,8 @@ clay #EB895F
 grass #97B067
 hard #717BC5
 black #333333
+
+atp light #00AFF0
+atp dark #002865
+wta green #00FF88
+wta purple #3B005D

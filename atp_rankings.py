@@ -8,11 +8,14 @@ def retrieve_rankings(file_path):
 
     df["rank"] = df["rank"].astype(int)
     df["player"] = df["player"].astype(str)
-    df["player"] = df["points"].astype(int)
+    df["points"] = df["points"].astype(int)
     df["ranking_date"] = df["ranking_date"].astype(str)
-    df["ranking_date"] = df["ranking_date"].str.replace(r'(\d{4})(\d{2})(\d{2})',
-                                                        r'\3-\2-\1',
-                                                        regex=True)
+    df["ranking_date"] = pd.to_datetime(df["ranking_date"], format='%Y%m%d')
+
+    df = df.sort_values("ranking_date", ascending=False)
+    df = df.drop_duplicates(subset="player", keep="first")
+
+    df = df.sort_values("rank", ascending=True)
     return df
 
 
