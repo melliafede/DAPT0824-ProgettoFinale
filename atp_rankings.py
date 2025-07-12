@@ -24,6 +24,12 @@ set_display_options()
 atp_rankings = retrieve_rankings("tennis_atp-master/atp_rankings_current.csv")
 print(atp_rankings.head(100))
 
+wta_rankings = retrieve_rankings("tennis_wta-master/wta_rankings_current.csv")
+print(wta_rankings.head(100))
+
 ''' Write to csv '''
 dest_file_path = "report_datasets/atp_rankings_current.csv"
 atp_rankings.to_csv(dest_file_path)
+
+dest_file_path = "report_datasets/wta_rankings_current.csv"
+wta_rankings.to_csv(dest_file_path)
