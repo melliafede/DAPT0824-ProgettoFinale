@@ -16,7 +16,7 @@ def retrieve_players_characteristic(file_path):
     )
     df = df[df["year_of_birth"] != "nan"]
     df["year_of_birth"] = df["year_of_birth"].astype(int)
-    df = df[(df["year_of_birth"] >= 1980) & (df["year_of_birth"] < 2025 - 16)]
+    df = df[(df["year_of_birth"] >= 1970) & (df["year_of_birth"] < 2025 - 16)]
     df["player_name"] = df["name_first"] + ' ' + df["name_last"]
     df = df[df["player_name"].str.len() > 2]
     df = df.drop(columns=["name_first", "name_last"])
